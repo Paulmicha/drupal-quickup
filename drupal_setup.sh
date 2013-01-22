@@ -8,7 +8,7 @@
 #   @see http://drush.ws
 #   @see http://drushmake.me
 #
-#   @version 1.1
+#   @version 1.3
 #   @author Paulmicha
 #
 
@@ -37,7 +37,6 @@ DEFAULT_UNIX_MOD="775"
 WRITEABLE_UNIX_OWNER="www-data"
 WRITEABLE_UNIX_GROUP="www-data"
 WRITEABLE_UNIX_MOD="775"
-
 
 #--------------------------------------
 #       DB installation
@@ -108,44 +107,137 @@ drush dl token
 drush en token -y
 drush dl ctools views
 drush en ctools views views_ui -y
-#drush dl date
-#drush en date -y
-#drush en date_all_day date_popup date_repeat date_repeat_field date_views -y
-#drush dl dates
-#drush en dates -y
-#       @todo check download ckeditor lib
-#drush dl ckeditor
-#drush en ckeditor -y
-#drush dl linkit
-#drush en linkit -y
-#drush dl insert
-#drush en insert -y
+drush dl date
+drush en date -y
+drush en date_all_day date_popup date_repeat date_repeat_field date_views -y
+drush dl dates
+drush en dates -y
+drush dl menu_block
+drush en menu_block -y
 
 #       Content architecture
 drush dl entity
 drush en entity -y
 drush dl entityreference
 drush en entityreference -y
+
+#       Entity reference helpers :
+#       This may screw up bulk media upload
+#drush dl entityconnect
+#drush en entityconnect -y
+#       This only provides selection, no creation
+#drush dl entityreference_view_widget
+#drush en entityreference_view_widget -y
+#       Tested 21:05 21/01/2013 :
+#           This module requires patch http://drupal.org/node/1780646
+#           and fails to provide selection !!!
+#drush dl inline_entity_form
+#drush en inline_entity_form -y
+#       (Untested)
+#drush dl inline_entity_form-7.x-1.x-dev
+#drush en inline_entity_form -y
+#drush dl references_dialog
+#drush en references_dialog -y
+
 #       @see also http://drupal.org/project/entity_tree
 #drush dl relation
 #drush en relation relation_ui -y
+
+#       CKEditor
+drush dl wysiwyg wysiwyg_ckeditor
+drush en wysiwyg ckeditor -y
+
+#       Wysiwyg common extensions
+#drush dl linkit
+#drush en linkit -y
+#       Images : what about responsive & retina image insertion inside wysiwyg ?
+#       @todo use "picture" module with custom token (because it needs to be rendered through a special field formatter)
+#drush dl insert
+#drush en insert -y
 
 #       User profiles
 #drush dl profile2
 #drush en profile2 -y
 
+#       JQuery update
+drush dl jquery_update-7.x-2.x-dev
+drush en jquery_update -y
+
 #       Media
 drush dl media-7.x-2.x-dev file_entity
 drush en media file_entity -y
+drush dl ispreg
+drush en ispreg -y
+
+#       Image cropping helpers
+#       @see http://drupal.org/node/1179172
+drush dl imagecrop-7.x-1.x-dev
+drush en imagecrop -y
+#drush dl imagefield_focus
+#drush en imagefield_focus -y
+#drush dl manual-crop
+#drush en manualcrop -y
+
+#       Multiple / Bulk upload
+cd sites/all/libraries
+#wget https://github.com/moxiecode/plupload/archive/master.zip --quiet --no-check-certificate
+wget https://github.com/downloads/moxiecode/plupload/plupload_1_5_4.zip --quiet --no-check-certificate
+#unzip master.zip
+unzip plupload_1_5_4.zip
+#rm master.zip
+rm plupload_1_5_4.zip
+#mv plupload-master plupload
+chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
+chmod $DEFAULT_UNIX_MOD . -R
+cd ../../../
+drush dl plupload
+drush en plupload -y
+
+drush dl filefield_sources
+drush en filefield_sources -y
+drush dl filefield_sources_plupload
+drush en filefield_sources_plupload -y
 #drush dl bulk_media_upload
 #drush en bulk_media_upload -y
-#drush dl plupload
-#       @todo : get lib from https://github.com/downloads/moxiecode/plupload/plupload_1_5_4.zip
-#drush en plupload -y
-#drush dl colorbox
-#drush en colorbox -y
+
+#       Alternative : JQuery File Upload
+#       (looks good but requires more work)
+#cd sites/all/libraries
+#wget https://github.com/blueimp/jQuery-File-Upload/archive/master.zip --quiet --no-check-certificate
+#unzip master.zip
+#rm master.zip
+#mv jQuery-File-Upload-master jquery-file-upload
+#chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
+#chmod $DEFAULT_UNIX_MOD . -R
+#cd ../../../
+#drush dl jquery_file_upload
+#drush en jquery_file_upload -y
+
+#       Colorbox : download, cleanup & enable
+cd sites/all/libraries
+wget http://www.jacklmoore.com/colorbox/colorbox.zip --quiet
+unzip colorbox.zip
+rm colorbox.zip
+mv colorbox colorbox-orig
+mkdir colorbox
+mv colorbox-orig/jquery.colorbox.js colorbox/jquery.colorbox.js
+mv colorbox-orig/jquery.colorbox-min.js colorbox/jquery.colorbox-min.js
+rm colorbox-orig -r
+chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
+chmod $DEFAULT_UNIX_MOD . -R
+cd ../../../
+drush dl colorbox
+drush en colorbox -y
+
+#       Video Embeds (input filter transforming a YouTube / Vimeo link into an embed)
+drush dl googtube
+drush en googtube -y
+
+#       Video Embeds Alternative
 #drush dl emfield
 #drush en emfield -y
+
+#       Video players / controllers (stored locally)
 #drush dl videojs
 #drush en videojs -y
 #drush dl popcornjs
@@ -156,8 +248,8 @@ drush en media file_entity -y
 #drush en storage_api -y
 
 #       Linked Data
-drush dl microdata
-drush en microdata -y
+#drush dl microdata
+#drush en microdata -y
 #       OR
 #drush dl schemaorg
 #drush en schemaorg -y
@@ -173,34 +265,36 @@ drush en pathauto redirect globalredirect -y
 #drush en xmlsitemap -y
 #drush dl rich_snippets
 #drush en rich_snippets -y
-#drush dl seo_checklist
-#drush en seo_checklist -y
+#drush dl seo_checklist checklistapi
+#drush en seo_checklist checklistapi -y
 #drush dl menu_attributes
 #drush en menu_attributes -y
 
 #       Other
 #drush dl webform
 #drush en webform -y
+drush dl prod_check
+drush en prod_check -y
 
 
 #-----------------------------------------
 #       Email
 
-#drush dl mailsystem
-#drush en mailsystem -y
+drush dl mailsystem
+drush en mailsystem -y
 
-#cd sites/all/libraries
+cd sites/all/libraries
 #       check link for latest version
 #       @see http://swiftmailer.org/
-#wget http://swiftmailer.org/download_file/Swift-4.2.2.tar.gz --quiet
-#tar -zxf Swift-4.2.2.tar.gz
-#mv Swift-4.2.2 swiftmailer
-#rm Swift-4.2.2.tar.gz
-#chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
-#chmod $DEFAULT_UNIX_MOD . -R
-#cd ../../../
-#drush dl swiftmailer
-#drush en swiftmailer -y
+wget http://swiftmailer.org/download_file/Swift-4.3.0.tar.gz --quiet
+tar -zxf Swift-4.3.0.tar.gz
+mv Swift-4.3.0 swiftmailer
+rm Swift-4.3.0.tar.gz
+chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
+chmod $DEFAULT_UNIX_MOD . -R
+cd ../../../
+drush dl swiftmailer
+drush en swiftmailer -y
 
 #       DB dump 2 : "usual" install restore point
 drush bb
@@ -210,33 +304,49 @@ drush bb
 #       UX / Redaction helpers
 
 #       Input filters
+#       @todo : custom module for custom token
 #drush dl token_filter
 #drush en token_filter -y
 
 #       UI helpers
-#drush dl content_menu
-#drush en content_menu -y
+drush dl content_menu
+drush en content_menu -y
+drush dl options_element
+drush en options_element -y
 #drush dl draggableviews
 #drush en draggableviews -y
-drush dl module_filter
-drush en module_filter -y
-#drush dl permission_filter
-#drush en permission_filter -y
-#drush dl views_slideshow
-#drush en views_slideshow -y
+#drush dl module_filter
+#drush en module_filter -y
+#drush dl fpa
+#drush en fpa -y
+
+#       Node publishing options visibility
+drush dl override_node_options
+drush en override_node_options -y
+
+#       Adding custom node publishing options
+#drush dl custom_pub
+#drush en custom_pub -y
 
 #       Chosen (better select fields UX)
 cd sites/all/libraries
 wget https://github.com/harvesthq/chosen/archive/master.zip --quiet --no-check-certificate
 unzip master.zip
-mv chosen-master/chosen chosen
+mv chosen-master chosen
 rm master.zip
-rm chosen-master -r
 cd ../../../
 drush dl chosen
 drush en chosen -y
 drush vset --yes chosen_minimum "0"
-drush vset --yes chosen_jquery_selector "select:visible:not('.widget-type-select')"
+drush vset --yes chosen_jquery_selector "select:not('.widget-type-select')"
+#       NB : better settings for chosen
+#       1) default behaviour : search contains, @see http://drupal.org/node/1539444
+#       2) don't show search box on single selects unless they have at least 8+ items
+#       -> hack "chosen.js" in module folder, and set the following options :
+#var options = {};
+#options.search_contains = 1;
+#options.disable_search_threshold = 7;
+#$(this).chosen( options );
 
 #       Breadcrumbs
 drush dl crumbs
@@ -244,9 +354,9 @@ drush en crumbs -y
 #drush dl path_breadcrumbs
 #drush en path_breadcrumbs -y
 
-#       Other
-#drush dl article_templater
-#drush en article_templater -y
+#       Layout "presets" for use inside body / wysiwyg
+drush dl article_templater
+drush en article_templater -y
 
 
 #-----------------------------------------
@@ -254,6 +364,8 @@ drush en crumbs -y
 
 #drush dl i18n
 #drush en i18n -y
+#drush dl l10n_update
+#drush en l10n_update -y
 
 
 #-----------------------------------------
@@ -272,6 +384,8 @@ drush en crumbs -y
 #-----------------------------------------
 #       Access management
 
+#drush dl acl
+#drush en acl -y
 #drush dl content_access
 #drush en content_access -y
 #drush dl field_permissions
@@ -280,6 +394,10 @@ drush en crumbs -y
 #drush en nodeaccess_nodereference -y
 #drush dl node_access_rebuild_bonus
 #drush en node_access_rebuild_bonus -y
+
+#       Scheduled field access
+#drush dl fieldscheduler
+#drush en fieldscheduler -y
 
 
 #-----------------------------------------
@@ -300,8 +418,10 @@ drush en crumbs -y
 #drush en content_type_groups -y
 #drush dl restrict_node_page_view
 #drush en restrict_node_page_view -y
-#drush dl hierarchical_term_formatter
-#drush en hierarchical_term_formatter -y
+
+#       Display term and its parents
+drush dl hierarchical_term_formatter
+drush en hierarchical_term_formatter -y
 
 #       Import / Export / Migration
 #drush dl feeds
@@ -327,21 +447,37 @@ drush en crumbs -y
 #-----------------------------------------
 #       Social stuff
 
+#       Sign-in with external accounts (use OAUTH providers)
+drush dl oauth
+drush en oauth_common_providerui oauth_common -y
+
+#       OAuth Connector makes it possible to connect and sign in a Drupal user with accounts on most third party sites
+#       The Drupal 7 version is in beta and comes with Oauth2 support and presets for :
+#           Twitter
+#           LinkedIn
+#           Facebook
+#           Google (Google+ and more)
+#           Flickr
+drush dl http_client oauthconnector
+drush en http_client oauthconnector -y
+
 #       Login/import profile from third-party providers
 #       @see http://janrain.com/products/engage/engage-pricing/ (free plan until 2500 users/year)
 #drush dl rpx
 #drush en rpx -y
+
 #       Login with Facebook + patch on the way for importing profile data
 #       @see http://drupal.org/node/1507336#comment-6774122
 #drush dl fboauth
 #drush en fboauth -y
+
 #       (untested) Login with Gmail / Hotmail / Yahoomail
 #drush dl gconnect
 #drush en gconnect -y
 
 #       Twitter module : supports 3rd-party login (with oauth), tweets agregation (import), tweets publication (push)
 #drush dl oauth twitter
-#drush en oauth twitter -y
+#drush en oauth_common twitter -y
 #       Simpler, read-only Twitter module
 #drush dl twitter_pull
 #drush en twitter_pull -y
@@ -349,19 +485,72 @@ drush en crumbs -y
 #drush dl twitter_profile
 #drush en twitter_profile -y
 
+#       Force users to complete their profile
+#drush dl pfff
+#drush en pfff -y
+
 #       Social Agregation (twitter + rss feeds)
 #drush dl activitystream
 #drush en activitystream -y
 
 
 #-----------------------------------------
+#       Geolocalization
+
+#       Minimalistic solution (most basic)
+#       this module only uses a plain text field for entering an address
+#drush dl simple_gmap
+#drush en simple_gmap -y
+
+#       Addressfield (implements xNAL standard)
+drush dl addressfield
+drush en addressfield -y
+
+#       Geofield (stores complex coordinates)
+#       Note : also contains a simple display formatter using GMap (module "geofield_map")
+drush dl geofield
+drush en geofield geofield_map -y
+
+#       Geocoding (make "geofield" points from "addressfield", "geolocation", or "location")
+drush dl geocoder
+drush en geocoder -y
+
+#       Leaflet (light map display)
+#drush dl leaflet
+#drush en leaflet -y
+
+#       OpenLayers (heavier, more sophisticated map display)
+#drush dl openlayers
+#drush en openlayers -y
+
+#       Location field (7.x not ready yet, medium sophistication, wait for branch 7.x-5.x - will be using proper entities)
+#drush dl location
+#drush en location -y
+#drush dl locationmap
+#drush en locationmap -y
+
+#       Others (untested)
+#drush dl geolocation
+#drush en geolocation -y
+
+#       Geo-search
+#drush dl search_api_location
+#drush en search_api_location -y
+#drush dl openlayers_solr
+#drush en openlayers_solr -y
+
+
+#-----------------------------------------
 #       Dev utils
 
-#       Drush extensions
+#       Drush extensions (run once)
 #drush dl drush_iq
-#drush en drush_iq -y
-drush dl drush_cleanup
-drush en drush_cleanup -y
+drush dl drush_cleanup -n
+drush cleanup
+
+#       Monitoring
+#drush dl performance
+#drush en performance -y
 
 #       Config / deployment
 #drush dl features strongarm
@@ -369,8 +558,10 @@ drush en drush_cleanup -y
 #       Alternative : "true" configuration management
 #drush dl configuration
 #drush en configuration -y
+#drush dl diff
+#drush en diff -y
 
-#       Emails
+#       Emails (sandbox-like behaviour : sends all emails from Drupal to a single address)
 drush dl reroute_email
 drush en reroute_email -y
 
@@ -398,23 +589,71 @@ drush en reroute_email -y
 drush dl mothership
 drush en mothership -y
 #       Generate custom sub-theme (mothership comes with a neat drush command to generate a sub-theme)
+cd sites/all/themes/mothership
 drush mothership "$SITE_NAME"
+cd ../../../../
 
-#       Preprocessors
+#       HTML 5 helpers
+drush dl elements html5_tools
+drush en elements html5_tools-y
+
+#       Responsive helpers
+drush dl breakpoints
+drush en breakpoints -y
+#drush dl ais
+#drush en ais -y
+#drush dl picture
+#drush en picture -y
+
+#       Carousel - flexslider
+#drush dl flexslider
+#drush en flexslider -y
+#drush en flexslider_views flexslider_fields -y
+#       with Views Slideshow :
+#drush en flexslider_views_slideshow -y
+
+#       Carousel - alternatives
+#drush dl views_slideshow
+#drush en views_slideshow -y
+#drush dl field_slideshow
+#drush en field_slideshow -y
+
+#       Conditional stylesheets
+drush dl conditional_styles
+drush en conditional_styles -y
+
+#       CSS Preprocessor : Sass / Scss
 #drush dl sass
 #drush en sass -y
-#drush dl less
+
+#       CSS Preprocessor : Less
+#       Note after using this for a while: not recommended...
+#cd sites/all/libraries
+#wget http://leafo.net/lessphp/src/lessphp-0.3.8.tar.gz --quiet
+#tar -xzf lessphp-0.3.8.tar.gz
+#rm lessphp-0.3.8.tar.gz
+#cd ../../../
+#drush dl less-7.x-3.0-beta1
 #drush en less -y
 
-#       Layout management
-#drush dl ds
-#drush en ds -y
+#       Layout management - Display Suite
+drush dl ds
+drush en ds ds_ui -y
+#drush en ds ds_devel ds_extras ds_forms ds_format ds_ui ds_search -y
+
+#       Layout management - Theme Key
 #drush dl themekey
 #drush en themekey -y
-#drush dl context
-#drush en context -y
-#drush dl delta
-#drush en delta -y
+
+#       Layout management - Context
+drush dl context
+#drush en context context_ui -y
+drush en context context_layouts context_ui -y
+
+#       Layout management - Delta
+drush dl delta
+drush en delta delta_ui delta_blocks -y
+#drush en delta delta_ui delta_color delta_blocks -y
 
 #       Utils / Formatters
 #drush dl css_injector
@@ -428,9 +667,13 @@ drush mothership "$SITE_NAME"
 #drush dl backbone
 #drush en backbone -y
 
+#       Typography helpers
+drush dl typogrify
+drush en typogrify -y
+
 #       CSS / Styling (theme building)
 drush dl design
-drush en design -y
+drush en design_test -y
 drush dl styleguide
 drush en styleguide -y
 
@@ -438,19 +681,30 @@ drush en styleguide -y
 #-----------------------------------------
 #       Performance
 
-#       Faster 404
-drush dl fast_404
-drush en fast_404 -y
+#       Replacement for Drupal Core's default cache implementation
+#       @see http://www.metaltoad.com/blog/how-drupals-cron-killing-you-your-sleep-simple-cache-warmer
+drush dl adbc
+drush en adbc -y
 
-#       Front-end optimization
+#       Faster 404
+#       Note : see core's "settings.php"
+#drush dl fast_404
+#drush en fast_404 -y
+
+#       Drupal core JS / CSS aggregation optimization
+#drush dl agrcache
+#drush en agrcache -y
+#drush dl core_library
+#drush en core_library -y
 #drush dl advagg
 #drush en advagg -y
 
 #       Faster callbacks
-#drush dl js_callback
-#drush en js_callback -y
 #drush dl js
 #drush en js -y
+#       (Legacy module)
+#drush dl js_callback
+#drush en js_callback -y
 
 #       Pjax navigation
 #drush dl pjax
@@ -495,5 +749,4 @@ drush en fast_404 -y
 
 #       DB dump 3 : "start" restore point
 drush bb
-
 
