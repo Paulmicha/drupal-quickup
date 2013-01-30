@@ -8,7 +8,7 @@
 #   @see http://drush.ws
 #   @see http://drushmake.me
 #
-#   @version 1.3
+#   @version 1.4
 #   @author Paulmicha
 #
 
@@ -136,8 +136,8 @@ drush en entityreference -y
 #       (Untested)
 #drush dl inline_entity_form-7.x-1.x-dev
 #drush en inline_entity_form -y
-#drush dl references_dialog
-#drush en references_dialog -y
+drush dl references_dialog-7.x-1.x-dev
+drush en references_dialog -y
 
 #       @see also http://drupal.org/project/entity_tree
 #drush dl relation
@@ -193,12 +193,15 @@ cd ../../../
 drush dl plupload
 drush en plupload -y
 
-drush dl filefield_sources
-drush en filefield_sources -y
-drush dl filefield_sources_plupload
-drush en filefield_sources_plupload -y
-#drush dl bulk_media_upload
-#drush en bulk_media_upload -y
+#       Note : these don't work with "media" file widget, it's one OR the other.
+#       After all these years, we still have no decent media field UX
+#drush dl filefield_sources
+#drush en filefield_sources -y
+#drush dl filefield_sources_plupload
+#drush en filefield_sources_plupload -y
+#       Meanwhile :
+drush dl bulk_media_upload
+drush en bulk_media_upload -y
 
 #       Alternative : JQuery File Upload
 #       (looks good but requires more work)
@@ -230,12 +233,18 @@ drush dl colorbox
 drush en colorbox -y
 
 #       Video Embeds (input filter transforming a YouTube / Vimeo link into an embed)
-drush dl googtube
-drush en googtube -y
+#drush dl googtube
+#drush en googtube -y
 
 #       Video Embeds Alternative
-#drush dl emfield
-#drush en emfield -y
+drush dl emfield
+drush en emfield -y
+drush dl video_embed_field
+drush en video_embed_field -y
+
+#       Youtube video in Field field
+#drush dl media_youtube
+#drush en media_youtube -y
 
 #       Video players / controllers (stored locally)
 #drush dl videojs
@@ -392,6 +401,8 @@ drush en article_templater -y
 #drush en field_permissions -y
 #drush dl nodeaccess_nodereference
 #drush en nodeaccess_nodereference -y
+#drush dl node_access_relation
+#drush en node_access_relation -y
 #drush dl node_access_rebuild_bonus
 #drush en node_access_rebuild_bonus -y
 
@@ -418,6 +429,10 @@ drush en article_templater -y
 #drush en content_type_groups -y
 #drush dl restrict_node_page_view
 #drush en restrict_node_page_view -y
+
+#       UI for Entites customizations
+drush dl eck
+drush en eck -y
 
 #       Display term and its parents
 drush dl hierarchical_term_formatter
@@ -593,6 +608,10 @@ cd sites/all/themes/mothership
 drush mothership "$SITE_NAME"
 cd ../../../../
 
+#       Modal Forms (using CTools)
+drush dl modal_forms
+drush en modal_forms -y
+
 #       HTML 5 helpers
 drush dl elements html5_tools
 drush en elements html5_tools-y
@@ -605,7 +624,15 @@ drush en breakpoints -y
 #drush dl picture
 #drush en picture -y
 
-#       Carousel - flexslider
+#       Responsive tables (untested)
+#drush dl footable
+#drush en footable -y
+
+#       Mobile server-side detection (untested)
+#drush dl mobile_tools
+#drush en mobile_tools -y
+
+#       Carousel - flexslider - NB : when using Bootstrap or Zurb Foundation, there's already a carousel / orbit thingy, so no need for those
 #drush dl flexslider
 #drush en flexslider -y
 #drush en flexslider_views flexslider_fields -y
@@ -621,6 +648,11 @@ drush en breakpoints -y
 #       Conditional stylesheets
 drush dl conditional_styles
 drush en conditional_styles -y
+
+#       Theming JQuery UI
+#       update test 19:09 26/01/2013 - fails inside media module popups... WTF.
+#drush dl jqueryui_theme
+#drush en jqueryui_theme -y
 
 #       CSS Preprocessor : Sass / Scss
 #drush dl sass
