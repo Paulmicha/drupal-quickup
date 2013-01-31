@@ -8,7 +8,7 @@
 #   @see http://drush.ws
 #   @see http://drushmake.me
 #
-#   @version 1.4
+#   @version 1.5
 #   @author Paulmicha
 #
 
@@ -621,7 +621,7 @@ cd ../../../../
 
 #       HTML 5 helpers
 drush dl elements html5_tools
-drush en elements html5_tools-y
+drush en elements html5_tools -y
 
 #       Responsive helpers (@todo : test & compare these)
 #drush dl breakpoints
