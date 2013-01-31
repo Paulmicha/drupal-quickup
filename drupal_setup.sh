@@ -121,6 +121,10 @@ drush en entity -y
 drush dl entityreference
 drush en entityreference -y
 
+#       The CCK of Entities (UI for Entities customizations)
+drush dl eck
+drush en eck -y
+
 #       Entity reference helpers :
 #       This may screw up bulk media upload
 #drush dl entityconnect
@@ -136,8 +140,8 @@ drush en entityreference -y
 #       (Untested)
 #drush dl inline_entity_form-7.x-1.x-dev
 #drush en inline_entity_form -y
-drush dl references_dialog-7.x-1.x-dev
-drush en references_dialog -y
+#drush dl references_dialog-7.x-1.x-dev
+#drush en references_dialog -y
 
 #       @see also http://drupal.org/project/entity_tree
 #drush dl relation
@@ -166,6 +170,8 @@ drush en jquery_update -y
 #       Media
 drush dl media-7.x-2.x-dev file_entity
 drush en media file_entity -y
+
+#       Pre-generate image styles (needs more testing)
 drush dl ispreg
 drush en ispreg -y
 
@@ -180,21 +186,17 @@ drush en imagecrop -y
 
 #       Multiple / Bulk upload
 cd sites/all/libraries
-#wget https://github.com/moxiecode/plupload/archive/master.zip --quiet --no-check-certificate
 wget https://github.com/downloads/moxiecode/plupload/plupload_1_5_4.zip --quiet --no-check-certificate
-#unzip master.zip
 unzip plupload_1_5_4.zip
-#rm master.zip
 rm plupload_1_5_4.zip
-#mv plupload-master plupload
 chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
 chmod $DEFAULT_UNIX_MOD . -R
 cd ../../../
 drush dl plupload
 drush en plupload -y
 
-#       Note : these don't work with "media" file widget, it's one OR the other.
-#       After all these years, we still have no decent media field UX
+#       Note : these don't work with "media" selector widget, not the file field widget : it's one OR the other.
+#       Still looking for an implementation within media module's selector widget which would include plupload.
 #drush dl filefield_sources
 #drush en filefield_sources -y
 #drush dl filefield_sources_plupload
@@ -232,7 +234,7 @@ cd ../../../
 drush dl colorbox
 drush en colorbox -y
 
-#       Video Embeds (input filter transforming a YouTube / Vimeo link into an embed)
+#       Simplest Video Embeds (input filter transforming a YouTube / Vimeo link into an embed)
 #drush dl googtube
 #drush en googtube -y
 
@@ -242,7 +244,7 @@ drush en emfield -y
 drush dl video_embed_field
 drush en video_embed_field -y
 
-#       Youtube video in Field field
+#       Embed Youtube video from Media selection widget
 #drush dl media_youtube
 #drush en media_youtube -y
 
@@ -257,8 +259,8 @@ drush en video_embed_field -y
 #drush en storage_api -y
 
 #       Linked Data
-#drush dl microdata
-#drush en microdata -y
+drush dl microdata
+drush en microdata -y
 #       OR
 #drush dl schemaorg
 #drush en schemaorg -y
@@ -266,12 +268,14 @@ drush en video_embed_field -y
 #       SEO
 drush dl metatag
 drush en metatag -y
+drush dl opengraph_meta
+drush en opengraph_meta -y
 drush dl pathauto redirect globalredirect
 drush en pathauto redirect globalredirect -y
-#drush dl subpathauto
-#drush en subpathauto -y
 #drush dl xmlsitemap
 #drush en xmlsitemap -y
+#drush dl subpathauto
+#drush en subpathauto -y
 #drush dl rich_snippets
 #drush en rich_snippets -y
 #drush dl seo_checklist checklistapi
@@ -282,6 +286,8 @@ drush en pathauto redirect globalredirect -y
 #       Other
 #drush dl webform
 #drush en webform -y
+
+#       Nice to-do list worthy to look at before going live
 drush dl prod_check
 drush en prod_check -y
 
@@ -322,12 +328,10 @@ drush dl content_menu
 drush en content_menu -y
 drush dl options_element
 drush en options_element -y
-#drush dl draggableviews
-#drush en draggableviews -y
-#drush dl module_filter
-#drush en module_filter -y
-#drush dl fpa
-#drush en fpa -y
+drush dl module_filter
+drush en module_filter -y
+drush dl fpa
+drush en fpa -y
 
 #       Node publishing options visibility
 drush dl override_node_options
@@ -360,12 +364,9 @@ drush vset --yes chosen_jquery_selector "select:not('.widget-type-select')"
 #       Breadcrumbs
 drush dl crumbs
 drush en crumbs -y
+#       Alternative :
 #drush dl path_breadcrumbs
 #drush en path_breadcrumbs -y
-
-#       Layout "presets" for use inside body / wysiwyg
-drush dl article_templater
-drush en article_templater -y
 
 
 #-----------------------------------------
@@ -419,6 +420,8 @@ drush en article_templater -y
 #drush en eva -y
 #drush dl nodequeue
 #drush en nodequeue -y
+#drush dl draggableviews
+#drush en draggableviews -y
 #drush dl skyfield
 #drush en skyfield -y
 #drush dl field_group
@@ -430,13 +433,13 @@ drush en article_templater -y
 #drush dl restrict_node_page_view
 #drush en restrict_node_page_view -y
 
-#       UI for Entites customizations
-drush dl eck
-drush en eck -y
+#       Layout "presets" for use inside body / wysiwyg
+#drush dl article_templater
+#drush en article_templater -y
 
 #       Display term and its parents
-drush dl hierarchical_term_formatter
-drush en hierarchical_term_formatter -y
+#drush dl hierarchical_term_formatter
+#drush en hierarchical_term_formatter -y
 
 #       Import / Export / Migration
 #drush dl feeds
@@ -600,6 +603,10 @@ drush en reroute_email -y
 #-----------------------------------------
 #       Theming & Front-end
 
+#       Conditional stylesheets for IE
+drush dl conditional_styles
+drush en conditional_styles -y
+
 #       Base theme (mortendk rocks)
 drush dl mothership
 drush en mothership -y
@@ -609,16 +616,16 @@ drush mothership "$SITE_NAME"
 cd ../../../../
 
 #       Modal Forms (using CTools)
-drush dl modal_forms
-drush en modal_forms -y
+#drush dl modal_forms
+#drush en modal_forms -y
 
 #       HTML 5 helpers
 drush dl elements html5_tools
 drush en elements html5_tools-y
 
-#       Responsive helpers
-drush dl breakpoints
-drush en breakpoints -y
+#       Responsive helpers (@todo : test & compare these)
+#drush dl breakpoints
+#drush en breakpoints -y
 #drush dl ais
 #drush en ais -y
 #drush dl picture
@@ -638,39 +645,33 @@ drush en breakpoints -y
 #drush en flexslider_views flexslider_fields -y
 #       with Views Slideshow :
 #drush en flexslider_views_slideshow -y
-
 #       Carousel - alternatives
 #drush dl views_slideshow
 #drush en views_slideshow -y
 #drush dl field_slideshow
 #drush en field_slideshow -y
 
-#       Conditional stylesheets
-drush dl conditional_styles
-drush en conditional_styles -y
-
 #       Theming JQuery UI
-#       update test 19:09 26/01/2013 - fails inside media module popups... WTF.
+#       NB : fails when using jquery_update as of 2013/01/31 15:39:36
 #drush dl jqueryui_theme
 #drush en jqueryui_theme -y
 
-#       CSS Preprocessor : Sass / Scss
-#drush dl sass
-#drush en sass -y
-
 #       CSS Preprocessor : Less
-#       Note after using this for a while: not recommended...
+#       Note after using this for a while: not recommended... build your CSS locally instead.
 #cd sites/all/libraries
 #wget http://leafo.net/lessphp/src/lessphp-0.3.8.tar.gz --quiet
 #tar -xzf lessphp-0.3.8.tar.gz
 #rm lessphp-0.3.8.tar.gz
 #cd ../../../
 #drush dl less-7.x-3.0-beta1
+#       CSS Preprocessor : Sass / Scss
+#drush dl sass
+#drush en sass -y
 #drush en less -y
 
 #       Layout management - Display Suite
 drush dl ds
-drush en ds ds_ui -y
+drush en ds ds_ui ds_forms -y
 #drush en ds ds_devel ds_extras ds_forms ds_format ds_ui ds_search -y
 
 #       Layout management - Theme Key
@@ -683,8 +684,8 @@ drush dl context
 drush en context context_layouts context_ui -y
 
 #       Layout management - Delta
-drush dl delta
-drush en delta delta_ui delta_blocks -y
+#drush dl delta
+#drush en delta delta_ui delta_blocks -y
 #drush en delta delta_ui delta_color delta_blocks -y
 
 #       Utils / Formatters
@@ -695,7 +696,7 @@ drush en delta delta_ui delta_blocks -y
 #drush dl token_formatters
 #drush en token_formatters -y
 
-#       Front-end app architecture
+#       Front-end app architecture (untested)
 #drush dl backbone
 #drush en backbone -y
 
@@ -718,10 +719,22 @@ drush en styleguide -y
 drush dl adbc
 drush en adbc -y
 
+#       File Caches
+#drush dl boost
+#drush en boost -y
+#       OR
+#drush dl filecache
+#drush en filecache -y
+
 #       Faster 404
-#       Note : see core's "settings.php"
-#drush dl fast_404
-#drush en fast_404 -y
+#       Note : see core's "settings.php" about that. Errors when installing. Not maintained anymore ?
+#       @see http://drupal.org/node/1500092
+drush dl fast_404
+drush en fast_404 -y
+
+#       Drupal core JS optimization
+drush dl speedy
+drush en speedy -y
 
 #       Drupal core JS / CSS aggregation optimization
 #drush dl agrcache
@@ -746,13 +759,7 @@ drush en adbc -y
 #drush dl role_memory_limit
 #drush en role_memory_limit -y
 
-#       Cache
-#drush dl filecache
-#drush en filecache -y
-#       OR
-#drush dl boost
-#drush en boost -y
-
+#       More cache backends / utilities
 #drush dl entitycache
 #drush en entitycache -y
 #drush dl expire
