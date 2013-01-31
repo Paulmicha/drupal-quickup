@@ -37,6 +37,8 @@ DEFAULT_UNIX_MOD="775"
 WRITEABLE_UNIX_OWNER="www-data"
 WRITEABLE_UNIX_GROUP="www-data"
 WRITEABLE_UNIX_MOD="775"
+PROTECTED_CFG_UNIX_MOD="555"
+
 
 #--------------------------------------
 #       DB installation
@@ -79,6 +81,10 @@ chmod $WRITEABLE_UNIX_MOD $DRUPAL_PRIVATE_FILES_FOLDER -R
 drush vset --yes file_public_path $DRUPAL_FILES_FOLDER
 drush vset --yes file_private_path $DRUPAL_PRIVATE_FILES_FOLDER
 drush vset --yes file_temporary_path $DRUPAL_TMP_FOLDER
+
+#       Config chmod
+chmod $PROTECTED_CFG_UNIX_MOD sites/default
+chmod $PROTECTED_CFG_UNIX_MOD sites/default/settings.php
 
 
 #-----------------------------------------
@@ -189,6 +195,8 @@ cd sites/all/libraries
 wget https://github.com/downloads/moxiecode/plupload/plupload_1_5_4.zip --quiet --no-check-certificate
 unzip plupload_1_5_4.zip
 rm plupload_1_5_4.zip
+rm plupload/docs -r
+rm plupload/examples -r
 chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
 chmod $DEFAULT_UNIX_MOD . -R
 cd ../../../
@@ -611,6 +619,7 @@ drush en conditional_styles -y
 drush dl mothership
 drush en mothership -y
 #       Generate custom sub-theme (mothership comes with a neat drush command to generate a sub-theme)
+#       @see http://drupal.org/node/1829614
 cd sites/all/themes/mothership
 drush mothership "$SITE_NAME"
 cd ../../../../
@@ -729,8 +738,8 @@ drush en adbc -y
 #       Faster 404
 #       Note : see core's "settings.php" about that. Errors when installing. Not maintained anymore ?
 #       @see http://drupal.org/node/1500092
-drush dl fast_404
-drush en fast_404 -y
+#drush dl fast_404
+#drush en fast_404 -y
 
 #       Drupal core JS optimization
 drush dl speedy
@@ -788,4 +797,3 @@ drush en speedy -y
 
 #       DB dump 3 : "start" restore point
 drush bb
-
