@@ -8,7 +8,7 @@
 #   @see http://drush.ws
 #   @see http://drushmake.me
 #
-#   @version 1.5
+#   @version 1.6
 #   @author Paulmicha
 #
 
@@ -118,8 +118,8 @@ drush en date -y
 drush en date_all_day date_popup date_repeat date_repeat_field date_views -y
 drush dl dates
 drush en dates -y
-drush dl menu_block
-drush en menu_block -y
+#drush dl menu_block
+#drush en menu_block -y
 
 #       Content architecture
 drush dl entity
@@ -132,23 +132,20 @@ drush dl eck
 drush en eck -y
 
 #       Entity reference helpers :
+#       Tested 10:28 16/02/2013 - Notes :
+#           default config disallows selection of existing nodes, can be configured
+#           This module still requires patch http://drupal.org/node/1780646
+#drush dl inline_entity_form
+#drush en inline_entity_form -y
+#drush dl inline_entity_form-7.x-1.x-dev
+#drush en inline_entity_form -y
+#drush iq-apply-patch http://drupal.org/node/1780646
 #       This may screw up bulk media upload
 #drush dl entityconnect
 #drush en entityconnect -y
 #       This only provides selection, no creation
 #drush dl entityreference_view_widget
 #drush en entityreference_view_widget -y
-#       Tested 21:05 21/01/2013 :
-#           This module requires patch http://drupal.org/node/1780646
-#           and fails to provide selection !!!
-#drush dl inline_entity_form
-#drush en inline_entity_form -y
-#       (Untested)
-#drush dl inline_entity_form-7.x-1.x-dev
-#drush en inline_entity_form -y
-#drush dl references_dialog-7.x-1.x-dev
-#drush en references_dialog -y
-
 #       @see also http://drupal.org/project/entity_tree
 #drush dl relation
 #drush en relation relation_ui -y
@@ -178,8 +175,8 @@ drush dl media-7.x-2.x-dev file_entity
 drush en media file_entity -y
 
 #       Pre-generate image styles (needs more testing)
-drush dl ispreg
-drush en ispreg -y
+#drush dl ispreg
+#drush en ispreg -y
 
 #       Image cropping helpers
 #       @see http://drupal.org/node/1179172
@@ -247,10 +244,10 @@ drush en colorbox -y
 #drush en googtube -y
 
 #       Video Embeds Alternative
-drush dl emfield
-drush en emfield -y
-drush dl video_embed_field
-drush en video_embed_field -y
+#drush dl emfield
+#drush en emfield -y
+#drush dl video_embed_field
+#drush en video_embed_field -y
 
 #       Embed Youtube video from Media selection widget
 #drush dl media_youtube
@@ -276,10 +273,10 @@ drush en microdata -y
 #       SEO
 drush dl metatag
 drush en metatag -y
-drush dl opengraph_meta
-drush en opengraph_meta -y
 drush dl pathauto redirect globalredirect
 drush en pathauto redirect globalredirect -y
+#drush dl opengraph_meta
+#drush en opengraph_meta -y
 #drush dl xmlsitemap
 #drush en xmlsitemap -y
 #drush dl subpathauto
@@ -319,6 +316,10 @@ cd ../../../
 drush dl swiftmailer
 drush en swiftmailer -y
 
+#       Emails "throttling"
+#drush dl queue_mail
+#drush en queue_mail -y
+
 #       DB dump 2 : "usual" install restore point
 drush bb
 
@@ -331,15 +332,24 @@ drush bb
 #drush dl token_filter
 #drush en token_filter -y
 
+#       Prevent Simultaneous Edits
+#drush dl content_lock
+#drush en content_lock -y
+
+#       Prevent double submit click (Note: when using Bootstrap, cf. Buttons > Loading State)
+#       @see http://twitter.github.com/bootstrap/javascript.html#buttons
+#drush dl hide_submit
+#drush en hide_submit -y
+
 #       UI helpers
 drush dl content_menu
 drush en content_menu -y
 drush dl options_element
 drush en options_element -y
-drush dl module_filter
-drush en module_filter -y
-drush dl fpa
-drush en fpa -y
+#drush dl module_filter
+#drush en module_filter -y
+#drush dl fpa
+#drush en fpa -y
 
 #       Node publishing options visibility
 drush dl override_node_options
@@ -384,6 +394,13 @@ drush en crumbs -y
 #drush en i18n -y
 #drush dl l10n_update
 #drush en l10n_update -y
+
+
+#-----------------------------------------
+#       Security
+
+#drush dl seckit
+#drush en seckit -y
 
 
 #-----------------------------------------
@@ -474,8 +491,8 @@ drush en crumbs -y
 #       Social stuff
 
 #       Sign-in with external accounts (use OAUTH providers)
-drush dl oauth
-drush en oauth_common_providerui oauth_common -y
+#drush dl oauth
+#drush en oauth_common_providerui oauth_common -y
 
 #       OAuth Connector makes it possible to connect and sign in a Drupal user with accounts on most third party sites
 #       The Drupal 7 version is in beta and comes with Oauth2 support and presets for :
@@ -484,8 +501,8 @@ drush en oauth_common_providerui oauth_common -y
 #           Facebook
 #           Google (Google+ and more)
 #           Flickr
-drush dl http_client oauthconnector
-drush en http_client oauthconnector -y
+#drush dl http_client oauthconnector
+#drush en http_client oauthconnector -y
 
 #       Login/import profile from third-party providers
 #       @see http://janrain.com/products/engage/engage-pricing/ (free plan until 2500 users/year)
@@ -595,7 +612,10 @@ drush en reroute_email -y
 #drush dl better_batch
 #drush en better_batch -y
 
-#       Cron
+#       Cron enhancement (untested)
+#drush dl ultimate_cron
+#drush en ultimate_cron -y
+#       alternative :
 #drush dl elysia_cron
 #drush en elysia_cron -y
 
@@ -606,6 +626,10 @@ drush en reroute_email -y
 #       DB-related utils
 #drush dl schema
 #drush en schema -y
+
+#       Session-related utils
+#drush dl session_cache
+#drush en session_cache -y
 
 
 #-----------------------------------------
@@ -627,6 +651,10 @@ cd ../../../../
 #       Modal Forms (using CTools)
 #drush dl modal_forms
 #drush en modal_forms -y
+
+#       Image base64 CSS embedding (performance optimisation)
+#drush dl css_emimage
+#drush en css_emimage -y
 
 #       HTML 5 helpers
 drush dl elements html5_tools
@@ -710,14 +738,14 @@ drush en context context_layouts context_ui -y
 #drush en backbone -y
 
 #       Typography helpers
-drush dl typogrify
-drush en typogrify -y
+#drush dl typogrify
+#drush en typogrify -y
 
 #       CSS / Styling (theme building)
-drush dl design
-drush en design_test -y
 drush dl styleguide
 drush en styleguide -y
+#drush dl design
+#drush en design_test -y
 
 
 #-----------------------------------------
@@ -797,3 +825,4 @@ drush en speedy -y
 
 #       DB dump 3 : "start" restore point
 drush bb
+
