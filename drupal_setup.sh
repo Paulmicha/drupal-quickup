@@ -8,7 +8,7 @@
 #   @see http://drush.ws
 #   @see http://drushmake.me
 #
-#   @version 1.6
+#   @version 1.7
 #   @author Paulmicha
 #
 
@@ -140,12 +140,6 @@ drush en eck -y
 #drush dl inline_entity_form-7.x-1.x-dev
 #drush en inline_entity_form -y
 #drush iq-apply-patch http://drupal.org/node/1780646
-#       This may screw up bulk media upload
-#drush dl entityconnect
-#drush en entityconnect -y
-#       This only provides selection, no creation
-#drush dl entityreference_view_widget
-#drush en entityreference_view_widget -y
 #       @see also http://drupal.org/project/entity_tree
 #drush dl relation
 #drush en relation relation_ui -y
@@ -165,6 +159,11 @@ drush en wysiwyg ckeditor -y
 #       User profiles
 #drush dl profile2
 #drush en profile2 -y
+#       Note 2013/02/21 18:50:57 - when using Profile2, the "label" column always gets the value of bundle title
+#       -> using this auto_entitylabel is required when using an entity_reference field to target the profile entites directly using autocomplete
+#drush dl auto_entitylabel
+#drush en auto_entitylabel -y
+
 
 #       JQuery update
 drush dl jquery_update-7.x-2.x-dev
@@ -180,12 +179,12 @@ drush en media file_entity -y
 
 #       Image cropping helpers
 #       @see http://drupal.org/node/1179172
-drush dl imagecrop-7.x-1.x-dev
-drush en imagecrop -y
+drush dl manual-crop
+drush en manualcrop -y
+#drush dl imagecrop-7.x-1.x-dev
+#drush en imagecrop -y
 #drush dl imagefield_focus
 #drush en imagefield_focus -y
-#drush dl manual-crop
-#drush en manualcrop -y
 
 #       Multiple / Bulk upload
 cd sites/all/libraries
@@ -322,6 +321,23 @@ drush en swiftmailer -y
 
 #       DB dump 2 : "usual" install restore point
 drush bb
+
+
+#-----------------------------------------
+#       Useful field types
+
+#drush dl email
+#drush en email -y
+#drush dl invisimail
+#drush en invisimail -y
+
+#drush dl phone
+#drush en phone -y
+
+#       Note 2013/02/21 19:05:21 - BUG encountered when checking option "allow users to choose if it's an external link"
+#       Symptoms : no inputs show up in form, only the checkbox
+#drush dl link
+#drush en link -y
 
 
 #-----------------------------------------
@@ -595,14 +611,16 @@ drush cleanup
 #drush dl performance
 #drush en performance -y
 
-#       Config / deployment
+#       Configuration Management à la Drupal 8
+#       Note 2013/02/21 19:07:27 - This module is my preferred way now.
+drush dl configuration
+#drush dl configuration-7.x-2.x-dev
+drush en configuration -y
+drush dl diff
+drush en diff -y
+#       Popular alternative (meh)
 #drush dl features strongarm
 #drush en features strongarm -y
-#       Alternative : "true" configuration management
-#drush dl configuration
-#drush en configuration -y
-#drush dl diff
-#drush en diff -y
 
 #       Emails (sandbox-like behaviour : sends all emails from Drupal to a single address)
 drush dl reroute_email
@@ -644,15 +662,15 @@ drush dl mothership
 drush en mothership -y
 #       Generate custom sub-theme (mothership comes with a neat drush command to generate a sub-theme)
 #       @see http://drupal.org/node/1829614
-cd sites/all/themes/mothership
-drush mothership "$SITE_NAME"
-cd ../../../../
+#cd sites/all/themes/mothership
+#drush mothership "$SITE_NAME"
+#cd ../../../../
 
 #       Modal Forms (using CTools)
 #drush dl modal_forms
 #drush en modal_forms -y
 
-#       Image base64 CSS embedding (performance optimisation)
+#       Image base64 CSS embedding (performance optimization)
 #drush dl css_emimage
 #drush en css_emimage -y
 
