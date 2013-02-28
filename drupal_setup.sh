@@ -31,6 +31,9 @@ DRUPAL_FILES_FOLDER="sites/default/files"
 DRUPAL_TMP_FOLDER="sites/default/tmp"
 DRUPAL_PRIVATE_FILES_FOLDER="sites/default/private"
 
+#       Used if you choose the "configuration" module
+DRUPAL_CONFIGURATION_FILES_FOLDER="sites/all/configuration"
+
 DEFAULT_UNIX_OWNER="www-data"
 DEFAULT_UNIX_GROUP="www-data"
 DEFAULT_UNIX_MOD="775"
@@ -82,7 +85,12 @@ drush vset --yes file_public_path $DRUPAL_FILES_FOLDER
 drush vset --yes file_private_path $DRUPAL_PRIVATE_FILES_FOLDER
 drush vset --yes file_temporary_path $DRUPAL_TMP_FOLDER
 
-#       Config chmod
+#       Used if you choose the "configuration" module
+mkdir $DRUPAL_CONFIGURATION_FILES_FOLDER
+chown $WRITEABLE_UNIX_OWNER:$WRITEABLE_UNIX_GROUP $DRUPAL_CONFIGURATION_FILES_FOLDER -R
+chmod $WRITEABLE_UNIX_MOD $DRUPAL_CONFIGURATION_FILES_FOLDER -R
+
+#       Make config write-protected
 chmod $PROTECTED_CFG_UNIX_MOD sites/default
 chmod $PROTECTED_CFG_UNIX_MOD sites/default/settings.php
 
@@ -128,8 +136,8 @@ drush dl entityreference
 drush en entityreference -y
 
 #       The CCK of Entities (UI for Entities customizations)
-drush dl eck
-drush en eck -y
+#drush dl eck
+#drush en eck -y
 
 #       Entity reference helpers :
 #       Tested 10:28 16/02/2013 - Notes :
@@ -166,7 +174,8 @@ drush en wysiwyg ckeditor -y
 
 
 #       JQuery update
-drush dl jquery_update-7.x-2.x-dev
+#       Note: jquery_update-7.x-2.3 released with JQuery-1.8 as of 2013-Feb-09
+drush dl jquery_update
 drush en jquery_update -y
 
 #       Media
@@ -187,17 +196,18 @@ drush en manualcrop -y
 #drush en imagefield_focus -y
 
 #       Multiple / Bulk upload
-cd sites/all/libraries
-wget https://github.com/downloads/moxiecode/plupload/plupload_1_5_4.zip --quiet --no-check-certificate
-unzip plupload_1_5_4.zip
-rm plupload_1_5_4.zip
-rm plupload/docs -r
-rm plupload/examples -r
-chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
-chmod $DEFAULT_UNIX_MOD . -R
-cd ../../../
-drush dl plupload
-drush en plupload -y
+#       @todo 01:29 28/02/2013 - check URL for latest version
+#cd sites/all/libraries
+#wget https://github.com/downloads/moxiecode/plupload/plupload_1_5_4.zip --quiet --no-check-certificate
+#unzip plupload_1_5_4.zip
+#rm plupload_1_5_4.zip
+#rm plupload/docs -r
+#rm plupload/examples -r
+#chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
+#chmod $DEFAULT_UNIX_MOD . -R
+#cd ../../../
+#drush dl plupload
+#drush en plupload -y
 
 #       Note : these don't work with "media" selector widget, not the file field widget : it's one OR the other.
 #       Still looking for an implementation within media module's selector widget which would include plupload.
@@ -206,8 +216,8 @@ drush en plupload -y
 #drush dl filefield_sources_plupload
 #drush en filefield_sources_plupload -y
 #       Meanwhile :
-drush dl bulk_media_upload
-drush en bulk_media_upload -y
+#drush dl bulk_media_upload
+#drush en bulk_media_upload -y
 
 #       Alternative : JQuery File Upload
 #       (looks good but requires more work)
@@ -248,9 +258,12 @@ drush en colorbox -y
 #drush dl video_embed_field
 #drush en video_embed_field -y
 
-#       Embed Youtube video from Media selection widget
-#drush dl media_youtube
-#drush en media_youtube -y
+#       Embed Youtube / Dailymotion videos
+#       directly from Media selection widget
+drush dl media_youtube
+drush en media_youtube -y
+drush dl media_dailymotion
+drush en media_dailymotion -y
 
 #       Video players / controllers (stored locally)
 #drush dl videojs
@@ -270,6 +283,7 @@ drush en microdata -y
 #drush en schemaorg -y
 
 #       SEO
+#       Note: "Global redirect" may apparently cause troubles for i18n (ref. missing)
 drush dl metatag
 drush en metatag -y
 drush dl pathauto redirect globalredirect
@@ -292,8 +306,8 @@ drush en pathauto redirect globalredirect -y
 #drush en webform -y
 
 #       Nice to-do list worthy to look at before going live
-drush dl prod_check
-drush en prod_check -y
+#drush dl prod_check
+#drush en prod_check -y
 
 
 #-----------------------------------------
@@ -303,7 +317,7 @@ drush dl mailsystem
 drush en mailsystem -y
 
 cd sites/all/libraries
-#       check link for latest version
+#       Check link for latest version (current latest: 4.3.0 - 2013 January 8)
 #       @see http://swiftmailer.org/
 wget http://swiftmailer.org/download_file/Swift-4.3.0.tar.gz --quiet
 tar -zxf Swift-4.3.0.tar.gz
@@ -326,18 +340,17 @@ drush bb
 #-----------------------------------------
 #       Useful field types
 
+#drush dl phone
+#drush en phone -y
 #drush dl email
 #drush en email -y
 #drush dl invisimail
 #drush en invisimail -y
 
-#drush dl phone
-#drush en phone -y
-
 #       Note 2013/02/21 19:05:21 - BUG encountered when checking option "allow users to choose if it's an external link"
 #       Symptoms : no inputs show up in form, only the checkbox
-#drush dl link
-#drush en link -y
+drush dl link
+drush en link -y
 
 
 #-----------------------------------------
@@ -371,6 +384,11 @@ drush en options_element -y
 drush dl override_node_options
 drush en override_node_options -y
 
+#       Adds a publish and unpublish button for a simpler editorial workflow
+#       @see http://www.lullabot.com/articles/module-monday-publish-button
+drush dl publish_button
+drush en publish_button -y
+
 #       Adding custom node publishing options
 #drush dl custom_pub
 #drush en custom_pub -y
@@ -402,14 +420,24 @@ drush en crumbs -y
 #drush dl path_breadcrumbs
 #drush en path_breadcrumbs -y
 
+#       Complement to Crumbs & alternative to menu_block
+#       (apparently, no admin UI though)
+#drush dl menupoly
+#drush en menupoly -y
+
 
 #-----------------------------------------
-#       Multilingual (todo)
+#       Multilingual (in progress)
 
+#       Install another language
+drush en locale -y
+drush dl l10n_update
+drush en l10n_update -y
+
+#       Handle content translation
+#drush en translation -y
 #drush dl i18n
 #drush en i18n -y
-#drush dl l10n_update
-#drush en l10n_update -y
 
 
 #-----------------------------------------
@@ -613,6 +641,7 @@ drush cleanup
 
 #       Configuration Management à la Drupal 8
 #       Note 2013/02/21 19:07:27 - This module is my preferred way now.
+#       @todo automatically set the variable for configuration files path
 drush dl configuration
 #drush dl configuration-7.x-2.x-dev
 drush en configuration -y
@@ -735,8 +764,8 @@ drush en ds ds_ui ds_forms -y
 
 #       Layout management - Context
 drush dl context
-#drush en context context_ui -y
-drush en context context_layouts context_ui -y
+drush en context context_ui -y
+#drush en context context_layouts context_ui -y
 
 #       Layout management - Delta
 #drush dl delta
@@ -771,6 +800,11 @@ drush en styleguide -y
 
 #       Replacement for Drupal Core's default cache implementation
 #       @see http://www.metaltoad.com/blog/how-drupals-cron-killing-you-your-sleep-simple-cache-warmer
+#       In your settings.php file, you'll need to add the following lines to force Drupal to use the ADBC backend :
+#       <?php
+#       $conf['cache_backends'][] = 'sites/all/modules/adbc/adbc.cache.inc';
+#       $conf['cache_default_class'] = 'AlternativeDrupalDatabaseCache';
+#       ?>
 drush dl adbc
 drush en adbc -y
 
