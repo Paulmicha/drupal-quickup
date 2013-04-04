@@ -166,7 +166,7 @@ drush en wysiwyg ckeditor -y
 
 
 #       JQuery update
-drush dl jquery_update-7.x-2.x-dev
+drush dl jquery_update
 drush en jquery_update -y
 
 #       Media
@@ -251,6 +251,26 @@ drush en colorbox -y
 #       Embed Youtube video from Media selection widget
 #drush dl media_youtube
 #drush en media_youtube -y
+
+#       Embed DailyMotion video from Media selection widget
+#drush dl media_dailymotion
+#drush en media_dailymotion -y
+
+#       HTML 5 Video and Audio player : MediaElement.js (untested)
+#       @see http://mediaelementjs.com/
+cd sites/all/libraries
+wget http://github.com/johndyer/mediaelement/zipball/master --quiet
+mv master master.zip
+unzip master.zip
+#       @todo 2013/04/03 11:52:40 - syntax to match dirname without "-3ee7a7d" ?
+mv johndyer-mediaelement-3ee7a7d/ mediaelement
+rm master.zip
+chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
+chmod $DEFAULT_UNIX_MOD . -R
+cd ../../../
+drush dl mediaelement
+drush en mediaelement -y
+
 
 #       Video players / controllers (stored locally)
 #drush dl videojs
@@ -606,6 +626,10 @@ drush en geocoder -y
 #drush dl drush_iq
 drush dl drush_cleanup -n
 drush cleanup
+
+#       Modules introspection / overview
+drush dl moduleinfo
+drush en moduleinfo -y
 
 #       Monitoring
 #drush dl performance
