@@ -395,6 +395,8 @@ drush dl content_menu
 drush en content_menu -y
 drush dl options_element
 drush en options_element -y
+#drush dl select_or_other
+#drush en select_or_other -y
 #drush dl term_reference_tree
 #drush en term_reference_tree -y
 #drush dl module_filter
@@ -446,6 +448,10 @@ drush en crumbs -y
 #       (apparently, no admin UI though)
 #drush dl menupoly
 #drush en menupoly -y
+
+#       Replace anything that's passed through t()
+#drush dl stringoverrides
+#drush en stringoverrides -y
 
 
 #-----------------------------------------
