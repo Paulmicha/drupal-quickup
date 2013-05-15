@@ -512,6 +512,19 @@ drush en l10n_update -y
 #-----------------------------------------
 #       Site building / Content Architecture
 
+#       Helper modules
+#       Export/import support for : Node types, Taxonomy, User, Fields, Field Groups
+#drush dl bundle_copy
+#drush en bundle_copy -y
+
+#       Collection of useful UI tools for working with fields (untested) :
+#           Apply a vocabulary to multiple entities and bundles at once
+#           Clone any field instance to multiple entities and bundles
+#           Clone all field instance of a bundle to multiple entities and bundles
+#           Delete multiple instances of a field
+#drush dl field_tools
+#drush en field_tools -y
+
 #       Structure
 #drush dl eva
 #drush en eva -y
