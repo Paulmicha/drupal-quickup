@@ -799,20 +799,25 @@ drush en elements html5_tools -y
 #drush en less -y
 
 #       Layout management - Display Suite
-drush dl ds
-drush en ds ds_ui ds_forms -y
+#drush dl ds
+#drush en ds ds_ui ds_forms -y
 #drush en ds ds_devel ds_extras ds_forms ds_format ds_ui ds_search -y
 
-#       Layout management - Theme Key
-#drush dl themekey
-#drush en themekey -y
+#       Layout management - Display Suite alternative with combination of the following smaller modules (untested as of 2013/05/29 11:38:52)
+#       Note : would work well with "context" module, and a base theme with flexible regions like "omega"
+drush dl entity_view_mode fieldblock
+drush en entity_view_mode fieldblock -y
 
 #       Layout management - Context
 drush dl context
 drush en context context_ui -y
 #drush en context context_layouts context_ui -y
 
-#       Layout management - Delta
+#       Layout management - Theme Key (untested)
+#drush dl themekey
+#drush en themekey -y
+
+#       Layout management - Delta (untested)
 #drush dl delta
 #drush en delta delta_ui delta_blocks -y
 #drush en delta delta_ui delta_color delta_blocks -y
@@ -850,8 +855,8 @@ drush en styleguide -y
 #       $conf['cache_backends'][] = 'sites/all/modules/adbc/adbc.cache.inc';
 #       $conf['cache_default_class'] = 'AlternativeDrupalDatabaseCache';
 #       ?>
-drush dl adbc
-drush en adbc -y
+#drush dl adbc
+#drush en adbc -y
 
 #       File Caches
 #drush dl boost
