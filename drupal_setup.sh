@@ -233,15 +233,16 @@ drush en manualcrop -y
 #drush en jquery_file_upload -y
 
 #       Colorbox : download, cleanup & enable
+#       updated url 2013/06/17 10:20:00
 cd sites/all/libraries
-wget http://www.jacklmoore.com/colorbox/colorbox.zip --quiet
-unzip colorbox.zip
-rm colorbox.zip
-mv colorbox colorbox-orig
+wget https://github.com/jackmoore/colorbox/archive/master.zip --quiet
+unzip master.zip
+rm master.zip
 mkdir colorbox
-mv colorbox-orig/jquery.colorbox.js colorbox/jquery.colorbox.js
-mv colorbox-orig/jquery.colorbox-min.js colorbox/jquery.colorbox-min.js
-rm colorbox-orig -r
+mv colorbox-master/jquery.colorbox.js colorbox/jquery.colorbox.js
+mv colorbox-master/jquery.colorbox-min.js colorbox/jquery.colorbox-min.js
+mv colorbox-master/i18n colorbox/i18n
+rm colorbox-master -r
 chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
 chmod $DEFAULT_UNIX_MOD . -R
 cd ../../../
