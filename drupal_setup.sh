@@ -732,6 +732,14 @@ drush en reroute_email -y
 drush dl conditional_styles
 drush en conditional_styles -y
 
+#       Front-end Utils
+#drush dl magic
+#drush en magic -y
+
+#       Compass Theme (untested)
+#drush dl aurora
+#drusn en aurora -y
+
 #       Base theme (mortendk rocks)
 drush dl mothership
 drush en mothership -y
