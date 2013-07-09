@@ -340,10 +340,10 @@ drush en mailsystem -y
 cd sites/all/libraries
 #       Check link for latest version (current latest: 4.3.0 - 2013 January 8)
 #       @see http://swiftmailer.org/
-wget http://swiftmailer.org/download_file/Swift-4.3.0.tar.gz --quiet
-tar -zxf Swift-4.3.0.tar.gz
-mv Swift-4.3.0 swiftmailer
-rm Swift-4.3.0.tar.gz
+wget http://swiftmailer.org/download_file/Swift-5.0.1.tar.gz --quiet
+tar -zxf Swift-5.0.1.tar.gz
+mv Swift-5.0.1 swiftmailer
+rm Swift-5.0.1.tar.gz
 chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
 chmod $DEFAULT_UNIX_MOD . -R
 cd ../../../
