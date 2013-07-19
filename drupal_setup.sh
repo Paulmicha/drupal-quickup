@@ -8,7 +8,7 @@
 #   @see http://drush.ws
 #   @see http://drushmake.me
 #
-#   @version 1.7
+#   @version 1.8
 #   @author Paulmicha
 #
 
@@ -149,12 +149,16 @@ drush en entityreference -y
 #drush en inline_entity_form -y
 #drush iq-apply-patch http://drupal.org/node/1780646
 #       @see also http://drupal.org/project/entity_tree
-#drush dl relation
-#drush en relation relation_ui -y
+
+#       Relations
+drush dl relation relation_add
+drush en relation relation_ui relation_add -y
 
 #       CKEditor
-drush dl wysiwyg wysiwyg_ckeditor
-drush en wysiwyg ckeditor -y
+#drush dl wysiwyg ckeditor
+#drush en wysiwyg ckeditor -y
+#       (Expermiental alternative)
+#drush dl wysiwyg wysiwyg_ckeditor
 
 #       Wysiwyg common extensions
 #drush dl linkit
@@ -183,17 +187,19 @@ drush dl media-7.x-2.x-dev file_entity
 drush en media file_entity -y
 
 #       Pre-generate image styles (needs more testing)
-#drush dl ispreg
-#drush en ispreg -y
+drush dl ispreg
+drush en ispreg -y
 
 #       Image cropping helpers
 #       @see http://drupal.org/node/1179172
-drush dl manual-crop
-drush en manualcrop -y
+#drush dl manualcrop
+#drush en manualcrop -y
+drush dl imagefield_focus
+drush en imagefield_focus -y
+drush dl smartcrop
+drush en smartcrop -y
 #drush dl imagecrop-7.x-1.x-dev
 #drush en imagecrop -y
-#drush dl imagefield_focus
-#drush en imagefield_focus -y
 
 #       Multiple / Bulk upload
 #       @todo 01:29 28/02/2013 - check URL for latest version
@@ -297,18 +303,22 @@ drush en mediaelement -y
 #drush en storage_api -y
 
 #       Linked Data
-drush dl microdata
-drush en microdata -y
+#drush dl microdata
+#drush en microdata -y
 #       OR
-#drush dl schemaorg
-#drush en schemaorg -y
+drush dl schemaorg
+drush en schemaorg -y
 
 #       SEO
-#       Note: "Global redirect" may apparently cause troubles for i18n (ref. missing)
 drush dl metatag
 drush en metatag -y
-drush dl pathauto redirect globalredirect
-drush en pathauto redirect globalredirect -y
+drush dl pathauto redirect
+drush en pathauto redirect -y
+
+#       Note: "Global redirect" may apparently cause troubles for i18n (ref. missing)
+#drush dl pathauto redirect globalredirect
+#drush en pathauto redirect globalredirect -y
+
 #drush dl opengraph_meta
 #drush en opengraph_meta -y
 #drush dl xmlsitemap
@@ -361,12 +371,12 @@ drush bb
 #-----------------------------------------
 #       Useful field types
 
-#drush dl phone
-#drush en phone -y
-#drush dl email
-#drush en email -y
-#drush dl invisimail
-#drush en invisimail -y
+drush dl phone
+drush en phone -y
+drush dl email
+drush en email -y
+drush dl invisimail
+drush en invisimail -y
 
 #       Note 2013/02/21 19:05:21 - BUG encountered when checking option "allow users to choose if it's an external link"
 #       Symptoms : no inputs show up in form, only the checkbox
@@ -379,8 +389,8 @@ drush en link -y
 
 #       Input filters
 #       @todo : custom module for custom token
-#drush dl token_filter
-#drush en token_filter -y
+drush dl token_filter
+drush en token_filter -y
 
 #       Prevent Simultaneous Edits
 #drush dl content_lock
@@ -398,12 +408,12 @@ drush dl options_element
 drush en options_element -y
 #drush dl select_or_other
 #drush en select_or_other -y
-#drush dl term_reference_tree
-#drush en term_reference_tree -y
+drush dl term_reference_tree
+drush en term_reference_tree -y
 #drush dl module_filter
 #drush en module_filter -y
-#drush dl fpa
-#drush en fpa -y
+drush dl fpa
+drush en fpa -y
 
 #       Node publishing options visibility
 drush dl override_node_options
@@ -411,8 +421,12 @@ drush en override_node_options -y
 
 #       Adds a publish and unpublish button for a simpler editorial workflow
 #       @see http://www.lullabot.com/articles/module-monday-publish-button
-drush dl publish_button
-drush en publish_button -y
+#drush dl publish_button
+#drush en publish_button -y
+
+#       Alternative
+drush dl publishcontent
+drush en publishcontent -y
 
 #       Adding custom node publishing options
 #drush dl custom_pub
@@ -454,6 +468,10 @@ drush en crumbs -y
 #drush dl stringoverrides
 #drush en stringoverrides -y
 
+#       Modal Forms (using CTools)
+#drush dl modal_forms
+#drush en modal_forms -y
+
 
 #-----------------------------------------
 #       Multilingual (in progress)
@@ -464,9 +482,9 @@ drush dl l10n_update
 drush en l10n_update -y
 
 #       Handle content translation
-#drush en translation -y
-#drush dl i18n
-#drush en i18n -y
+drush en translation -y
+drush dl i18n
+drush en i18n -y
 
 
 #-----------------------------------------
@@ -494,8 +512,8 @@ drush en l10n_update -y
 
 #drush dl acl
 #drush en acl -y
-#drush dl content_access
-#drush en content_access -y
+drush dl content_access
+drush en content_access -y
 #drush dl field_permissions
 #drush en field_permissions -y
 #drush dl nodeaccess_nodereference
@@ -527,20 +545,20 @@ drush en l10n_update -y
 #drush en field_tools -y
 
 #       Structure
-#drush dl eva
-#drush en eva -y
+drush dl eva
+drush en eva -y
 #drush dl nodequeue
 #drush en nodequeue -y
 #drush dl draggableviews
 #drush en draggableviews -y
 #drush dl skyfield
 #drush en skyfield -y
-#drush dl field_group
-#drush en field_group -y
+drush dl field_group
+drush en field_group -y
 #drush dl field_collection
 #drush en field_collection -y
-#drush dl content_type_groups
-#drush en content_type_groups -y
+drush dl content_type_groups
+drush en content_type_groups -y
 #drush dl restrict_node_page_view
 #drush en restrict_node_page_view -y
 
@@ -552,11 +570,13 @@ drush en l10n_update -y
 #drush dl hierarchical_term_formatter
 #drush en hierarchical_term_formatter -y
 
-#       Import / Export / Migration
+#       Import / Export
 #drush dl feeds
 #drush en feeds -y
 #drush dl phpexcel
 #drush en phpexcel -y
+
+#       Migrate
 #drush dl migrate
 #drush en migrate migrate_ui -y
 
@@ -686,28 +706,27 @@ drush en moduleinfo -y
 #drush en performance -y
 
 #       Configuration Management à la Drupal 8
-#       Note 2013/02/21 19:07:27 - This module is my preferred way now.
-#       @todo automatically set the variable for configuration files path
-drush dl configuration
+#drush dl configuration
 #drush dl configuration-7.x-2.x-dev
-drush en configuration -y
-drush dl diff
-drush en diff -y
-#       Popular alternative (meh)
-#drush dl features strongarm
-#drush en features strongarm -y
+#drush en configuration -y
+#drush dl diff
+#drush en diff -y
+
+#       Popular alternative
+drush dl features strongarm
+drush en features strongarm -y
 
 #       Emails (sandbox-like behaviour : sends all emails from Drupal to a single address)
-drush dl reroute_email
-drush en reroute_email -y
+#drush dl reroute_email
+#drush en reroute_email -y
 
 #       Batch
 #drush dl better_batch
 #drush en better_batch -y
 
 #       Cron enhancement (untested)
-#drush dl ultimate_cron
-#drush en ultimate_cron -y
+drush dl ultimate_cron
+drush en ultimate_cron -y
 #       alternative :
 #drush dl elysia_cron
 #drush en elysia_cron -y
@@ -721,8 +740,8 @@ drush en reroute_email -y
 #drush en schema -y
 
 #       Session-related utils
-#drush dl session_cache
-#drush en session_cache -y
+drush dl session_cache
+drush en session_cache -y
 
 
 #-----------------------------------------
@@ -740,18 +759,13 @@ drush en conditional_styles -y
 #drush dl aurora
 #drusn en aurora -y
 
-#       Base theme (mortendk rocks)
-drush dl mothership
-drush en mothership -y
-#       Generate custom sub-theme (mothership comes with a neat drush command to generate a sub-theme)
-#       @see http://drupal.org/node/1829614
-#cd sites/all/themes/mothership
-#drush mothership "$SITE_NAME"
-#cd ../../../../
+#       Compass theme alternative
+#drush dl sasson
+#drusn en sasson -y
 
-#       Modal Forms (using CTools)
-#drush dl modal_forms
-#drush en modal_forms -y
+#       Base theme
+#drush dl mothership
+#drush en mothership -y
 
 #       Image base64 CSS embedding (performance optimization)
 #drush dl css_emimage
@@ -776,13 +790,17 @@ drush en elements html5_tools -y
 #       Mobile server-side detection (untested)
 #drush dl mobile_tools
 #drush en mobile_tools -y
+#drush dl wurfl
+#drush en wurfl -y
 
 #       Carousel - flexslider - NB : when using Bootstrap or Zurb Foundation, there's already a carousel / orbit thingy, so no need for those
 #drush dl flexslider
 #drush en flexslider -y
 #drush en flexslider_views flexslider_fields -y
+
 #       with Views Slideshow :
 #drush en flexslider_views_slideshow -y
+
 #       Carousel - alternatives
 #drush dl views_slideshow
 #drush en views_slideshow -y
@@ -814,12 +832,18 @@ drush en elements html5_tools -y
 
 #       Layout management - Display Suite alternative with combination of the following smaller modules (untested as of 2013/05/29 11:38:52)
 #       Note : would work well with "context" module, and a base theme with flexible regions like "omega"
-drush dl entity_view_mode fieldblock
-drush en entity_view_mode fieldblock -y
+drush dl entity_view_mode
+drush en entity_view_mode -y
+#drush dl fieldblock
+#drush en fieldblock -y
+
+#       Testing panels integration with entity_view_mode 2013/07/19 17:59:25
+drush dl panelizer
+drush en panelizer -y
 
 #       Layout management - Context
-drush dl context
-drush en context context_ui -y
+#drush dl context
+#drush en context context_ui -y
 #drush en context context_layouts context_ui -y
 
 #       Layout management - Theme Key (untested)
