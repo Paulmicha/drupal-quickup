@@ -101,6 +101,10 @@ drush dis update -y
 drush dl admin_menu devel backup_migrate libraries transliteration
 drush en admin_menu admin_menu_toolbar devel backup_migrate libraries transliteration -y
 
+#       Theme for admin menu
+drush dl adminimal_admin_menu
+drush en adminimal_admin_menu -y
+
 #       DB dump 1 : "standard" install restore point
 drush bb
 
@@ -339,6 +343,11 @@ drush en i18n i18n_node i18n_select i18n_redirect i18n_user -y
 #drush en i18n_menu -y
 #drush en i18n_block -y
 #drush en i18n_taxonomy -y
+
+#       Language detection : cookie
+#       @see https://www.drupal.org/node/2398959
+drush dl language_cookie
+drush en language_cookie -y
 
 
 #-----------------------------------------
