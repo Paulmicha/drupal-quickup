@@ -244,6 +244,10 @@ drush en url -y
 #drush dl word_link
 #drush en word_link -y
 
+#       Collapse input format description
+drush dl hide_formats
+drush en hide_formats -y
+
 #       Prevent double submit click
 #drush dl hide_submit
 #drush en hide_submit -y
@@ -257,6 +261,10 @@ drush en url -y
 #drush en select_or_other -y
 #drush dl term_reference_tree
 #drush en term_reference_tree -y
+
+#       Entity reference helpers
+#drush dl inline_entity_form
+#drush en inline_entity_form -y
 
 #       Node publishing options visibility
 #drush dl override_node_options
@@ -686,6 +694,38 @@ drush en entity_view_mode -y
 
 
 #-----------------------------------------
+#       Commerce
+
+drush dl commerce
+drush en commerce commerce_ui -y
+drush en commerce_customer commerce_customer_ui -y
+drush en commerce_price -y
+drush en commerce_line_item commerce_line_item_ui -y
+drush en commerce_order commerce_order_ui -y
+drush en commerce_checkout commerce_payment commerce_product -y
+drush en commerce_cart commerce_product_pricing -y
+#drush en commerce_tax -y
+drush en commerce_product_ui -y
+#drush en commerce_tax_ui -y
+
+#       Stock
+drush dl commerce_stock
+drush en commerce_stock -y
+
+#       Payment
+drush dl commerce_cheque
+drush en commerce_cheque -y
+drush dl commerce_pay_in_person
+drush en commerce_pay_in_person -y
+drush dl commerce_bank_transfer
+drush en commerce_bank_transfer -y
+
+#       Invoice (untested)
+#drush dl commerce_billy
+#drush en commerce_billy -y
+
+
+#-----------------------------------------
 #       Performance
 
 #       Faster 404
@@ -693,6 +733,10 @@ drush en entity_view_mode -y
 #       -> to re-test as of 7.x-1.4
 #drush dl fast_404
 #drush en fast_404 -y
+
+#       Image cache utils
+#drush dl imageinfo_cache
+#drush en imageinfo_cache -y
 
 #       Faster callbacks (ajax)
 #drush dl js
