@@ -183,6 +183,10 @@ drush en redirect -y
 #drush dl prod_check
 #drush en prod_check -y
 
+#       Media
+#drush dl imagestyleflush
+#drush en imagestyleflush -y
+
 
 #-----------------------------------------
 #       Email
@@ -337,12 +341,12 @@ drush en translation -y
 drush dl i18n
 drush en i18n i18n_node i18n_select i18n_redirect i18n_user -y
 #drush en i18n_variable -y
-#drush en i18n_field -y
+drush en i18n_field -y
 #drush en i18n_sync -y
 #drush en i18n_path -y
 #drush en i18n_menu -y
 #drush en i18n_block -y
-#drush en i18n_taxonomy -y
+drush en i18n_taxonomy -y
 
 #       Language detection : cookie
 #       @see https://www.drupal.org/node/2398959
