@@ -348,6 +348,10 @@ drush en i18n_field -y
 #drush en i18n_block -y
 drush en i18n_taxonomy -y
 
+#       Translation overview
+drush dl translation_overview
+drush en translation_overview -y
+
 #       Language detection : cookie
 #       @see https://www.drupal.org/node/2398959
 drush dl language_cookie
