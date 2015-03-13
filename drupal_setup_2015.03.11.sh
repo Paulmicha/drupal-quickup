@@ -189,6 +189,7 @@ drush en imagestyleflush -y
 drush dl imageinfo_cache
 drush en imageinfo_cache -y
 #       • Generate and stores MD5, SHA-1 and/or SHA-256 hashes for each file uploaded to the site
+#           + @see https://www.drupal.org/node/1910372
 drush dl filehash
 drush en filehash -y
 #       • Implement a 'hash://' schema to store up to ~ ten million files - ex: a0/49/a0493e27f48b50e18312b9f4508fc29d.txt
@@ -374,10 +375,34 @@ drush en l10n_update -y
 
 
 #-----------------------------------------
-#       Security
+#       Security / Antispam
 
 #drush dl seckit
 #drush en seckit -y
+
+#       Note : this requires additional server config
+#       @see README.txt
+drush dl fail2ban
+drush en fail2ban -y
+
+#       Note : "drush en badbehavior" will attempt "svn checkout" in sites/all/librairies
+#       + in local dev, may trigger when using different browsers
+#       @see http://bad-behavior.ioerror.us/download/
+drush dl badbehavior
+drush en badbehavior -y
+
+#       Prevents SPAM from reaching the server by implementing hashcash
+#       Config : admin/config/system/hashcash
+drush dl hashcash
+drush en hashcash -y
+
+#       Config : admin/config/content/honeypot
+drush dl honeypot
+drush en honeypot -y
+
+#       Config : admin/config/people/spamicide
+#drush dl spamicide
+#drush en spamicide -y
 
 
 #-----------------------------------------
@@ -401,10 +426,10 @@ drush dl content_access
 drush en content_access -y
 #drush dl field_permissions
 #drush en field_permissions -y
-drush dl restrict_node_page_view
-drush en restrict_node_page_view -y
-drush dl nodeaccess_nodereference
-drush en nodeaccess_nodereference -y
+#drush dl restrict_node_page_view
+#drush en restrict_node_page_view -y
+#drush dl nodeaccess_nodereference
+#drush en nodeaccess_nodereference -y
 #drush dl node_access_relation
 #drush en node_access_relation -y
 #drush dl node_access_rebuild_bonus
@@ -529,6 +554,28 @@ drush en hybridauth -y
 #drush en message_subscribe message_subscribe_ui -y
 #drush dl message_notify
 #drush en message_notify -y
+
+
+#-----------------------------------------
+#       Media
+
+#       Multiple files upload widget
+drush dl plupload
+cd sites/all/libraries
+wget https://github.com/moxiecode/plupload/archive/v1.5.8.zip --quiet --no-check-certificate
+unzip v1.5.8.zip
+mv plupload-1.5.8 plupload
+rm plupload/examples -r
+chown $DEFAULT_UNIX_OWNER:$DEFAULT_UNIX_GROUP . -R
+chmod $DEFAULT_UNIX_MOD . -R
+cd ../../../
+drush en plupload -y
+
+#       Bulk files / images upload
+drush dl bulk_media_upload
+drush en bulk_media_upload -y
+#drush dl bulk_file_nodes
+#drush en bulk_file_nodes -y
 
 
 #-----------------------------------------
