@@ -84,7 +84,7 @@ chmod $PROTECTED_CFG_UNIX_MOD sites/default
 chmod $PROTECTED_CFG_UNIX_MOD sites/default/settings.php
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       From minimal install
 #       to my "standard" dev setup
 
@@ -106,7 +106,7 @@ drush en adminimal_admin_menu -y
 drush bb
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Usual modules
 
 #       Basic functions
@@ -192,7 +192,7 @@ drush en imageinfo_cache -y
 #           + @see https://www.drupal.org/node/1910372
 drush dl filehash
 drush en filehash -y
-#       • Implement a 'hash://' schema to store up to ~ ten million files - ex: a0/49/a0493e27f48b50e18312b9f4508fc29d.txt
+#       • (untested) Implement a 'hash://' schema to store up to ~ ten million files - ex: a0/49/a0493e27f48b50e18312b9f4508fc29d.txt
 #drush dl hash_wrapper-7.x-1.x-dev
 #drush en hash_wrapper -y
 #       • [unstable] Aliases for uploaded files (i.e., no more '/sites/default/files/')
@@ -200,7 +200,7 @@ drush en filehash -y
 #drush en file_aliases -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Email
 
 drush dl mailsystem
@@ -227,7 +227,7 @@ drush en swiftmailer -y
 drush bb
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Useful field types
 
 #       (Core)
@@ -248,12 +248,12 @@ drush en number -y
 #drush en tablefield -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       UX / Redaction helpers
 
 #       Better Login / Register UX
-drush dl super_login
-drush en super_login -y
+#drush dl super_login
+#drush en super_login -y
 
 #       Input filters
 #       @todo : custom module for custom token
@@ -289,6 +289,10 @@ drush en hide_formats -y
 #       Entity reference helpers
 #drush dl inline_entity_form
 #drush en inline_entity_form -y
+#drush dl references_dialog
+#drush en references_dialog -y
+#drush dl entityreference_prepopulate
+#drush en entityreference_prepopulate -y
 
 #       Node publishing options visibility
 #drush dl override_node_options
@@ -299,7 +303,7 @@ drush en hide_formats -y
 #drush dl publish_button
 #drush en publish_button -y
 
-#       Alternative
+#       (untested) Alternative
 #drush dl publishcontent
 #drush en publishcontent -y
 
@@ -327,10 +331,6 @@ drush en hide_formats -y
 #drush dl modal_forms
 #drush en modal_forms -y
 
-#       jQuery update
-drush dl jquery_update
-drush en jquery_update -y
-
 #       Colorbox
 #cd sites/all/libraries
 #wget https://github.com/jackmoore/colorbox/archive/master.zip --quiet --no-check-certificate
@@ -344,7 +344,7 @@ drush en jquery_update -y
 #drush en colorbox -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Multilingual
 
 #       Install another language
@@ -374,7 +374,7 @@ drush en l10n_update -y
 #drush en language_cookie -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Security / Antispam
 
 #drush dl seckit
@@ -405,7 +405,7 @@ drush en honeypot -y
 #drush en spamicide -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Workflow & content moderation
 
 #drush dl revisioning
@@ -417,7 +417,7 @@ drush en honeypot -y
 #drush en workbench -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Access management
 
 #drush dl acl
@@ -440,38 +440,59 @@ drush en content_access -y
 #drush en fieldscheduler -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Site building / Content Architecture
 
-#       Helper modules
-#       Export/import support for : Node types, Taxonomy, User, Fields, Field Groups
+#       Field API related :
+#       • Export/import support for Node types, Taxonomy, User, Fields, Field Groups
 #drush dl bundle_copy
 #drush en bundle_copy -y
-
-#       Collection of useful UI tools for working with fields (untested) :
+#       • Collection of useful UI tools for working with fields :
 #           Apply a vocabulary to multiple entities and bundles at once
 #           Clone any field instance to multiple entities and bundles
 #           Clone all field instance of a bundle to multiple entities and bundles
 #           Delete multiple instances of a field
 #drush dl field_tools
 #drush en field_tools -y
-
-#       Structure
-#drush dl eva
-#drush en eva -y
-#drush dl nodequeue
-#drush en nodequeue -y
+#       • Per-entity custom fields (as opposed to core per-bundle fields):
+#drush dl skyfield
+#drush en skyfield -y
+#       • Structure
 #drush dl field_group
 #drush en field_group -y
 #drush dl field_collection
 #drush en field_collection -y
-
-#drush dl draggableviews
-#drush en draggableviews -y
-#drush dl skyfield
-#drush en skyfield -y
+#       • (untested)
 #drush dl content_type_groups
 #drush en content_type_groups -y
+
+#       Views-related :
+#       • Placing Views on entities as fields (from Field API)
+#drush dl eva
+#drush en eva -y
+#       • Inserting Views in other views as fields (from Views displays)
+#drush dl views_field_view
+#drush en views_field_view -y
+#       • Special Views allowing manual selection of contents
+#drush dl nodequeue
+#drush en nodequeue -y
+#       • Style plugin for Views
+#drush dl views_tree
+#drush en views_tree -y
+#drush dl draggableviews
+#drush en draggableviews -y
+#       • Rows manipulations (post-query approach)
+#           "For example, you can group the result set on a taxonomy term,
+#           so that all rows sharing the same value of the taxonomy column are represented as single rows,
+#           with aggregation functions like COUNT, ENUMERATE or SUM applied to the remaining columns."
+#drush dl views_aggregator
+#drush en views_aggregator -y
+#       • Alternative to views_aggregator relying on the database to perform aggregation
+#drush dl views_calc
+#drush en views_calc -y
+#       • Exposed filters customizations
+drush dl better_exposed_filters
+drush en better_exposed_filters -y
 
 #       Layout "presets" for use inside body / wysiwyg
 #drush dl article_templater
@@ -508,7 +529,7 @@ drush en flag -y
 #drush en splashify -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Social stuff
 
 #       Realname
@@ -556,7 +577,7 @@ drush en hybridauth -y
 #drush en message_notify -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Media
 
 #       Multiple files upload widget
@@ -577,8 +598,12 @@ drush en bulk_media_upload -y
 #drush dl bulk_file_nodes
 #drush en bulk_file_nodes -y
 
+#       Image-related
+drush dl exif_orientation
+drush en exif_orientation -y
 
-#-----------------------------------------
+
+#------------------------------------------------------
 #       Geolocalization
 
 #       Addressfield (implements xNAL standard)
@@ -622,8 +647,12 @@ drush en geolocation -y
 #drush en openlayers_solr -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Dev utils
+
+#       jQuery update
+drush dl jquery_update
+drush en jquery_update -y
 
 #       Dummy content
 #drush dl realistic_dummy_content
@@ -684,7 +713,7 @@ drush en elysia_cron -y
 #drush en schema -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Theming & Front-end
 
 #       Conditional stylesheets for IE
@@ -776,7 +805,7 @@ drush en fences -y
 #drush en design_test -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Commerce
 
 #drush dl commerce
@@ -808,7 +837,7 @@ drush en fences -y
 #drush en commerce_billy -y
 
 
-#-----------------------------------------
+#------------------------------------------------------
 #       Performance
 
 #       Faster 404
